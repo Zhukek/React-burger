@@ -1,0 +1,38 @@
+.list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    column-gap: 8px;
+}
+
+.ingridient {
+    margin: 24px 0 32px 16px;
+    padding: 0;
+    width: 272px;
+    height: 208px;
+}
+
+.ingridientIcon {
+    margin: 0 auto;
+    padding: 0;
+    width: 240px;
+    display: block;
+}
+
+.price {
+    margin: 8px auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.ingridientName {
+    text-align: center;
+}
+
+.sectionName {
+    grid-column: 1 / 3;
+}
