@@ -1,0 +1,44 @@
+.header {
+    margin: 0;
+    padding: 0;
+    background-color: #1C1C21;
+    width: 100vw;
+}
+
+.navigation {
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    max-width: 1280px;
+}
+
+.menu {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.menuItem {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile {
+    composes: menuItem;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
