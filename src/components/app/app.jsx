@@ -20,10 +20,14 @@ const App = () => {
   const [actualIngridient, setActualIngridient] = React.useState({});
   const [actualModal, setActualModal] = React.useState();
 
+  const checkResonce = (res) => {
+    return res.ok ? res.json() : Promise.reject(new Error(`Произошла ошибка со статус-кодом ${res.status}`))
+  }
+
   useEffect(() => {
     const getData = () => {
       fetch(constant.url)
-        .then((res) => res.json())
+        .then(checkResonce)
         .then((ingridients) => sort(ingridients.data))
         .then((list) => {
           const [buns, sauces, main] = list;
@@ -61,19 +65,18 @@ const App = () => {
   return (
     <div className={AppStyles.app}>
       <AppHeader />
-      {isLoading ? <></> : 
+      {!isLoading && 
         <main className={AppStyles.main}>
           <BurgerIngridients buns = {ingridients.buns} sauces = {ingridients.sauces} main = {ingridients.main} openIngridient={openIngridient}/>
           <BurgerConstructor bun = {ingridients.buns[0]} ingridients = {[...ingridients.sauces, ...ingridients.main]} makeOrder = {makeOrder}/>
         </main>
       }
 
-      {isModalOpened ? 
+      {isModalOpened && 
         <Modal close={closeModal} title={actualModal === 'ingridient' ? constant.titleIngridients : ''}>
           {actualModal === 'ingridient' && <IngridientDetails actualIngridient={actualIngridient}/>}
           {actualModal === 'order' && <OrderDetails />}
-        </Modal> :
-        <></>
+        </Modal>
       }
     </div>
   )

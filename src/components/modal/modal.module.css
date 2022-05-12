@@ -1,3 +1,16 @@
+.main {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .modal {
     margin: 0;
     padding: 0;
@@ -7,6 +20,7 @@
     width: 720px;
     min-height: 104px;
     position: relative;
+    z-index: 1;
 }
 
 .close {

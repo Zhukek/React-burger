@@ -15,14 +15,12 @@ const ModalOverlay = (props) => {
     <div className={OverlayStyle.overlay}
       onClick={close}
       ref={overlayRef}>
-      {props.children}
     </div>
   )
 }
 
 ModalOverlay.propTypes = {
-  close: PropTypes.func.isRequired,
-  children: PropTypes.element.isRequired
+  close: PropTypes.func.isRequired
 }
 
 export default ModalOverlay

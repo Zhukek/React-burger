@@ -23,7 +23,7 @@ const Modal = (props) => {
   
 
   return ReactDOM.createPortal(
-    <ModalOverlay close={props.close}>
+    <div className={ModalStyles.main}>
       <div className={ModalStyles.modal}>
         <h3 className="mt-10 ml-10 mr-10 text text_type_main-large pt-3 pb-3">{props.title}</h3>
         <button className={ModalStyles.close}
@@ -32,7 +32,8 @@ const Modal = (props) => {
         </button>
         {props.children}
       </div>
-    </ModalOverlay>,
+      <ModalOverlay close={props.close} />
+    </div>,
     document.getElementById('rootModal')
   )
 }

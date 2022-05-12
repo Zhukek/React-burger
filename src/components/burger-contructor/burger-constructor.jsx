@@ -7,10 +7,9 @@ import { ingridientDataType } from "../../utils/constants.js";
 const BurgerConstructor = (props) => {
   const [total, setTotal] = React.useState(0)
   useEffect(() => {
-    let sum = 0;
-    [props.bun, ...props.ingridients].forEach((ingridient) => {sum += ingridient.price})
-    setTotal(sum)
-  },[total])
+    let sum = [props.bun, ...props.ingridients].reduce((prev, current) => {return prev + current.price}, 0);
+    setTotal(sum);
+  },[props.bun, props.ingridients])
     
 
   return (
