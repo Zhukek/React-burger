@@ -1,0 +1,13 @@
+.order {
+    margin: 0;
+    padding: 56px 0 120px 0;
+    text-align: center;
+}
+
+.doneImage {
+    display: block;
+    margin: 60px auto;
+    padding: 0;
+    width: 120px;
+    height: 120px;
+}

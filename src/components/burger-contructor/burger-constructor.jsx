@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import burgerConstructorStyles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from 'prop-types';
+import { ingridientDataType } from "../../utils/constants.js";
 
 const BurgerConstructor = (props) => {
+  const [total, setTotal] = React.useState(0)
+  useEffect(() => {
+    let sum = [props.bun, ...props.ingridients].reduce((prev, current) => {return prev + current.price}, 0);
+    setTotal(sum);
+  },[props.bun, props.ingridients])
+    
+
   return (
     <section className={burgerConstructorStyles.constructor}>
       <div className={burgerConstructorStyles.constructor__components}>
@@ -11,8 +19,8 @@ const BurgerConstructor = (props) => {
           <ConstructorElement
             type="top"
             isLocked={true}
-            text="Краторная булка N-200i (верх)"
-            price={200}
+            text={props.bun.name}
+            price={props.bun.price}
             thumbnail={props.bun.image}
           />
         </div>
@@ -32,18 +40,18 @@ const BurgerConstructor = (props) => {
           <ConstructorElement
             type="bottom"
             isLocked={true}
-            text="Краторная булка N-200i (низ)"
-            price={200}
+            text={props.bun.name}
+            price={props.bun.price}
             thumbnail={props.bun.image}
           />
         </div>
       </div>
       <div className = {`${burgerConstructorStyles.order} p-5`}>
         <div className= {burgerConstructorStyles.order__price}>
-          <p className="text text_type_digits-medium">680</p>
+          <p className="text text_type_digits-medium">{total}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="large">
+        <Button type="primary" size="large" onClick={props.makeOrder}>
           Оформить заказ
         </Button>
       </div>
@@ -52,8 +60,9 @@ const BurgerConstructor = (props) => {
 }
 
 BurgerConstructor.propTypes = {
-  bun: PropTypes.object.isRequired,
-  ingridients: PropTypes.array
+  bun: PropTypes.shape(ingridientDataType).isRequired,
+  ingridients: PropTypes.arrayOf(PropTypes.shape(ingridientDataType).isRequired),
+  makeOrder: PropTypes.func.isRequired
 }
 
 export default BurgerConstructor
