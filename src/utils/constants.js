@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
 export const url = 'https://norma.nomoreparties.space/api/ingredients';
+export const urlPOST = 'https://norma.nomoreparties.space/api/orders';
 export const titleIngridients = 'Детали ингредиента';
 export const ingridientDataType = {
     calories: PropTypes.number,

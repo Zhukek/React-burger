@@ -2,14 +2,20 @@ import React, { useEffect } from "react";
 import burgerConstructorStyles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from 'prop-types';
-import { ingridientDataType } from "../../utils/constants.js";
+import { ActualIngridientsContext } from "../../utils/actualIngridientsContext";
 
 const BurgerConstructor = (props) => {
+  const [actualIngridients, setActualIngridients] = React.useContext(ActualIngridientsContext);
+  const bun = actualIngridients.bun[0];          //Булка потом должны быть ттллько одна
+  const innerIngridients = [...actualIngridients.sauces, ...actualIngridients.main];
+  const ingridientsID = [bun._id, ...innerIngridients.map((ingridient) => {return ingridient._id}), bun._id]
+  
   const [total, setTotal] = React.useState(0)
   useEffect(() => {
-    let sum = [props.bun, ...props.ingridients].reduce((prev, current) => {return prev + current.price}, 0);
+    let sum = [bun,bun,...innerIngridients].reduce((prev, current) => {return prev + current.price}, 0);
     setTotal(sum);
-  },[props.bun, props.ingridients])
+  },[actualIngridients])
+
     
 
   return (
@@ -19,13 +25,13 @@ const BurgerConstructor = (props) => {
           <ConstructorElement
             type="top"
             isLocked={true}
-            text={props.bun.name}
-            price={props.bun.price}
-            thumbnail={props.bun.image}
+            text={`${bun.name} (верх)`}
+            price={bun.price}
+            thumbnail={bun.image}
           />
         </div>
         <ul className={burgerConstructorStyles.constructor__list}>
-          {props.ingridients.map((ingridient, index) => (
+          {innerIngridients.map((ingridient, index) => (
             <li className={`${burgerConstructorStyles.constructor__ingridient} mr-1`} key={index}>
               <DragIcon type="primary" />
               <ConstructorElement
@@ -40,9 +46,9 @@ const BurgerConstructor = (props) => {
           <ConstructorElement
             type="bottom"
             isLocked={true}
-            text={props.bun.name}
-            price={props.bun.price}
-            thumbnail={props.bun.image}
+            text={`${bun.name} (низ)`}
+            price={bun.price}
+            thumbnail={bun.image}
           />
         </div>
       </div>
@@ -51,7 +57,7 @@ const BurgerConstructor = (props) => {
           <p className="text text_type_digits-medium">{total}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="large" onClick={props.makeOrder}>
+        <Button type="primary" size="large" onClick={() => {props.makeOrder({"ingredients": ingridientsID})}}>
           Оформить заказ
         </Button>
       </div>
@@ -60,8 +66,6 @@ const BurgerConstructor = (props) => {
 }
 
 BurgerConstructor.propTypes = {
-  bun: PropTypes.shape(ingridientDataType).isRequired,
-  ingridients: PropTypes.arrayOf(PropTypes.shape(ingridientDataType).isRequired),
   makeOrder: PropTypes.func.isRequired
 }
 

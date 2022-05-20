@@ -6,6 +6,7 @@ import Modal from '../modal/modal.jsx';
 import IngridientDetails from '../ingridient-details/ingridient-details.jsx';
 import OrderDetails from '../order-details/order-details.jsx';
 import AppStyles from './app.module.css';
+import {ActualIngridientsContext} from '../../utils/actualIngridientsContext.js';
 import * as constant from '../../utils/constants.js';
 import sort from '../../utils/sort.js';
 
@@ -15,10 +16,16 @@ const App = () => {
     sauces: [],
     main: []
   });
+  const [actualIngridients, setActualIngridients] = React.useState({
+    bun: [],
+    sauces: [],
+    main: []
+  });         // потом булка должна быть только одна!
   const [isLoading, setLoading] = React.useState(true);
   const [isModalOpened, setModalOpen] = React.useState(false);
   const [actualIngridient, setActualIngridient] = React.useState({});
   const [actualModal, setActualModal] = React.useState();
+  const [orderNumber, setOrdernumber] = React.useState(0)
 
   const checkResonce = (res) => {
     return res.ok ? res.json() : Promise.reject(new Error(`Произошла ошибка со статус-кодом ${res.status}`))
@@ -36,6 +43,11 @@ const App = () => {
             sauces: sauces,
             main: main
           });
+          setActualIngridients({      //Потом удалить этот кусок!
+            bun: buns,
+            sauces: sauces,
+            main: main
+          });                         //потом удалить этот кусок!
         })
         .catch((err) => {console.log(err)})
         .finally(() => {setLoading(false)})
@@ -44,9 +56,23 @@ const App = () => {
     getData();
   },[])
 
-  const makeOrder = () => {
-    setActualModal('order');
-    setModalOpen(true);
+  const makeOrder = (ingridientsID) => {
+    fetch(constant.urlPOST, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(ingridientsID)
+    })
+      .then(checkResonce)
+      .then((data) => {
+        setOrdernumber(data.order.number)
+      })
+      .catch((err) => {console.log(err)})
+      .finally(() => {
+        setActualModal('order');
+        setModalOpen(true);
+      })
   }
 
   const openIngridient = (ingridient) => {
@@ -65,19 +91,21 @@ const App = () => {
   return (
     <div className={AppStyles.app}>
       <AppHeader />
-      {!isLoading && 
-        <main className={AppStyles.main}>
-          <BurgerIngridients buns = {ingridients.buns} sauces = {ingridients.sauces} main = {ingridients.main} openIngridient={openIngridient}/>
-          <BurgerConstructor bun = {ingridients.buns[0]} ingridients = {[...ingridients.sauces, ...ingridients.main]} makeOrder = {makeOrder}/>
-        </main>
-      }
+      <ActualIngridientsContext.Provider value={[actualIngridients, setActualIngridients]}>
+        {!isLoading && 
+          <main className={AppStyles.main}>
+            <BurgerIngridients buns = {ingridients.buns} sauces = {ingridients.sauces} main = {ingridients.main} openIngridient={openIngridient}/>
+            <BurgerConstructor makeOrder = {makeOrder}/>
+          </main>
+        }
 
-      {isModalOpened && 
-        <Modal close={closeModal} title={actualModal === 'ingridient' ? constant.titleIngridients : ''}>
-          {actualModal === 'ingridient' && <IngridientDetails actualIngridient={actualIngridient}/>}
-          {actualModal === 'order' && <OrderDetails />}
-        </Modal>
-      }
+        {isModalOpened && 
+          <Modal close={closeModal} title={actualModal === 'ingridient' ? constant.titleIngridients : ''}>
+            {actualModal === 'ingridient' && <IngridientDetails actualIngridient={actualIngridient}/>}
+            {actualModal === 'order' && <OrderDetails orderNumber={orderNumber}/>}
+          </Modal>
+        }
+      </ActualIngridientsContext.Provider>
     </div>
   )
 }
