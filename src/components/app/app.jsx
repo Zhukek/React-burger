@@ -6,8 +6,9 @@ import Modal from '../modal/modal.jsx';
 import IngridientDetails from '../ingridient-details/ingridient-details.jsx';
 import OrderDetails from '../order-details/order-details.jsx';
 import AppStyles from './app.module.css';
-import {ActualIngridientsContext} from '../../utils/actualIngridientsContext.js';
+import {ActualIngridientsContext} from '../../services/actualIngridientsContext.js';
 import * as constant from '../../utils/constants.js';
+import * as API from '../../utils/burger-api.js';
 import sort from '../../utils/sort.js';
 
 const App = () => {
@@ -17,58 +18,41 @@ const App = () => {
     main: []
   });
   const [actualIngridients, setActualIngridients] = React.useState({
-    bun: [],
-    sauces: [],
-    main: []
-  });         // потом булка должна быть только одна!
+    bun: null,
+    innerIngridients: []
+  });
   const [isLoading, setLoading] = React.useState(true);
   const [isModalOpened, setModalOpen] = React.useState(false);
   const [actualIngridient, setActualIngridient] = React.useState({});
   const [actualModal, setActualModal] = React.useState();
-  const [orderNumber, setOrdernumber] = React.useState(0)
-
-  const checkResonce = (res) => {
-    return res.ok ? res.json() : Promise.reject(new Error(`Произошла ошибка со статус-кодом ${res.status}`))
-  }
+  const [orderNumber, setOrdernumber] = React.useState(0);
+  const [error, setError] = React.useState();
 
   useEffect(() => {
-    const getData = () => {
-      fetch(constant.url)
-        .then(checkResonce)
-        .then((ingridients) => sort(ingridients.data))
-        .then((list) => {
-          const [buns, sauces, main] = list;
-          setIngridients({
-            buns: buns,
-            sauces: sauces,
-            main: main
-          });
-          setActualIngridients({      //Потом удалить этот кусок!
-            bun: buns,
-            sauces: sauces,
-            main: main
-          });                         //потом удалить этот кусок!
-        })
-        .catch((err) => {console.log(err)})
-        .finally(() => {setLoading(false)})
-    }
-
-    getData();
+    API.getIngridients()
+      .then((ingridients) => sort(ingridients.data))
+      .then((list) => {
+        const [buns, sauces, main] = list;
+        setIngridients({
+          buns: buns,
+          sauces: sauces,
+          main: main
+        });
+        setActualIngridients({      //Потом удалить этот кусок!
+          bun: buns[1],
+          innerIngridients: [...sauces, ...main]
+        });                         //потом удалить этот кусок!
+      })
+      .catch((err) => {setError(err)})
+      .finally(() => {setLoading(false)})
   },[])
 
   const makeOrder = (ingridientsID) => {
-    fetch(constant.urlPOST, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(ingridientsID)
-    })
-      .then(checkResonce)
+    API.sendOrder(ingridientsID)
       .then((data) => {
         setOrdernumber(data.order.number)
       })
-      .catch((err) => {console.log(err)})
+      .catch((err) => {setError(err)})
       .finally(() => {
         setActualModal('order');
         setModalOpen(true);

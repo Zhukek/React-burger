@@ -2,21 +2,20 @@ import React, { useEffect } from "react";
 import burgerConstructorStyles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from 'prop-types';
-import { ActualIngridientsContext } from "../../utils/actualIngridientsContext";
+import { ActualIngridientsContext } from "../../services/actualIngridientsContext";
 
 const BurgerConstructor = (props) => {
   const [actualIngridients, setActualIngridients] = React.useContext(ActualIngridientsContext);
-  const bun = actualIngridients.bun[0];          //Булка потом должны быть ттллько одна
-  const innerIngridients = [...actualIngridients.sauces, ...actualIngridients.main];
+  const bun = actualIngridients.bun;
+  const innerIngridients = actualIngridients.innerIngridients;
   const ingridientsID = [bun._id, ...innerIngridients.map((ingridient) => {return ingridient._id}), bun._id]
-  
   const [total, setTotal] = React.useState(0)
-  useEffect(() => {
-    let sum = [bun,bun,...innerIngridients].reduce((prev, current) => {return prev + current.price}, 0);
-    setTotal(sum);
-  },[actualIngridients])
-
-    
+  const constructorCart = React.useMemo(
+    (() => {
+      let sum = [bun,bun,...innerIngridients].reduce((prev, current) => {return prev + current.price}, 0);
+      setTotal(sum);
+    }),[actualIngridients]
+  )
 
   return (
     <section className={burgerConstructorStyles.constructor}>
