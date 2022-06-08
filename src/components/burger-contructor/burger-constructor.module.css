@@ -23,15 +23,6 @@
     overflow-y: auto;
 }
 
-.constructor__ingridient {
-    padding: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-}
-
 .constructor__list::-webkit-scrollbar {
     width: 8px;
     background: #2F2F37;

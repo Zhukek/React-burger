@@ -1,25 +1,52 @@
 import React, { useEffect } from "react";
 import burgerConstructorStyles from './burger-constructor.module.css';
-import { ConstructorElement, DragIcon, CurrencyIcon, Button } from "@ya.praktikum/react-developer-burger-ui-components";
-import PropTypes from 'prop-types';
-import { ActualIngridientsContext } from "../../services/actualIngridientsContext";
+import BurgerConstructorCard from "../burger-constructor-card/burger-constructor-card";
+import { ConstructorElement, CurrencyIcon, Button } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useSelector, useDispatch } from "react-redux";
+import { makeOrder } from '../../services/actions/actualModal.js';
+import { useDrop } from "react-dnd";
+import { CHOOSE_INGRIDIENT } from '../../services/actions/actualIngridients.js';
+import uniqid from 'uniqid';
 
-const BurgerConstructor = (props) => {
-  const [actualIngridients, setActualIngridients] = React.useContext(ActualIngridientsContext);
-  const bun = actualIngridients.bun;
-  const innerIngridients = actualIngridients.innerIngridients;
-  const ingridientsID = [bun._id, ...innerIngridients.map((ingridient) => {return ingridient._id}), bun._id]
-  const [total, setTotal] = React.useState(0)
-  const constructorCart = React.useMemo(
+const BurgerConstructor = () => {
+  const dispatch = useDispatch();
+
+  const orderClick = (IDs) => {
+    dispatch(makeOrder(IDs))
+  }
+  const bun = useSelector(store => store.burgerConstruct.bun);
+  const innerIngridients = useSelector(store => store.burgerConstruct.ingridients);
+  const [total, setTotal] = React.useState(0);  
+   
+  const ingridientsID = innerIngridients.length > 0 ? [bun._id, ...innerIngridients.map((ingridient) => {return ingridient._id}), bun._id] : 0;
+  
+  const cartSum = React.useMemo(
     (() => {
-      let sum = [bun,bun,...innerIngridients].reduce((prev, current) => {return prev + current.price}, 0);
-      setTotal(sum);
-    }),[actualIngridients]
+      const ingridients = innerIngridients.length > 0 ? [bun,bun,...innerIngridients] : [bun, bun];
+      return ingridients.reduce((prev, current) => {return prev + current.price}, 0);
+    }),[bun, innerIngridients.length]
   )
+
+  useEffect(() => {
+    setTotal(cartSum);
+  },[cartSum])
+
+  const [ , dropRef] = useDrop({
+    accept: 'ingridient',
+    drop(ingridient) {
+      const id = uniqid()
+      dispatch({
+        type: CHOOSE_INGRIDIENT,
+        ingridient: ingridient,
+        uniqid: id
+      })
+    }
+  })
+  
 
   return (
     <section className={burgerConstructorStyles.constructor}>
-      <div className={burgerConstructorStyles.constructor__components}>
+      <div className={burgerConstructorStyles.constructor__components} ref={dropRef}>
         <div className="mr-4">
           <ConstructorElement
             type="top"
@@ -30,16 +57,10 @@ const BurgerConstructor = (props) => {
           />
         </div>
         <ul className={burgerConstructorStyles.constructor__list}>
-          {innerIngridients.map((ingridient, index) => (
-            <li className={`${burgerConstructorStyles.constructor__ingridient} mr-1`} key={index}>
-              <DragIcon type="primary" />
-              <ConstructorElement
-                text={ingridient.name}
-                price={ingridient.price}
-                thumbnail={ingridient.image}
-              />
-            </li>
-          ))}
+          {innerIngridients.length > 0 ?
+          innerIngridients.map((ingridient, index) => (
+            <BurgerConstructorCard ingridient={ingridient} key={index} />
+          )) : <p className="text text_type_main-medium mr-10">Перетащите сюда ингридиенты</p>}
         </ul>
         <div className="mr-4">
           <ConstructorElement
@@ -56,16 +77,15 @@ const BurgerConstructor = (props) => {
           <p className="text text_type_digits-medium">{total}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="large" onClick={() => {props.makeOrder({"ingredients": ingridientsID})}}>
+        {bun._id !== 'none' && innerIngridients.length !== 0 &&
+        <Button type="primary" size="large" onClick={() => {orderClick({"ingredients": ingridientsID})}}>
           Оформить заказ
         </Button>
+        }
       </div>
     </section>  
   )
 }
 
-BurgerConstructor.propTypes = {
-  makeOrder: PropTypes.func.isRequired
-}
 
 export default BurgerConstructor

@@ -6,90 +6,43 @@ import Modal from '../modal/modal.jsx';
 import IngridientDetails from '../ingridient-details/ingridient-details.jsx';
 import OrderDetails from '../order-details/order-details.jsx';
 import AppStyles from './app.module.css';
-import {ActualIngridientsContext} from '../../services/actualIngridientsContext.js';
-import * as constant from '../../utils/constants.js';
-import * as API from '../../utils/burger-api.js';
-import sort from '../../utils/sort.js';
+
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { loadIngridients } from '../../services/actions/index.js';
+
+import { titleIngridients } from '../../services/constants.js';
 
 const App = () => {
-  const [ingridients, setIngridients] = React.useState({
-    buns: [],
-    sauces: [],
-    main: []
-  });
-  const [actualIngridients, setActualIngridients] = React.useState({
-    bun: null,
-    innerIngridients: []
-  });
-  const [isLoading, setLoading] = React.useState(true);
-  const [isModalOpened, setModalOpen] = React.useState(false);
-  const [actualIngridient, setActualIngridient] = React.useState({});
-  const [actualModal, setActualModal] = React.useState();
-  const [orderNumber, setOrdernumber] = React.useState(0);
-  const [error, setError] = React.useState();
+  const dispatch = useDispatch();
+
+  const {isLoading, hasError, ingridients} = useSelector(store => store.loading);
+  const {actualModal, isModalOpen} = useSelector(store => store.modal);
 
   useEffect(() => {
-    API.getIngridients()
-      .then((ingridients) => sort(ingridients.data))
-      .then((list) => {
-        const [buns, sauces, main] = list;
-        setIngridients({
-          buns: buns,
-          sauces: sauces,
-          main: main
-        });
-        setActualIngridients({      //Потом удалить этот кусок!
-          bun: buns[1],
-          innerIngridients: [...sauces, ...main]
-        });                         //потом удалить этот кусок!
-      })
-      .catch((err) => {setError(err)})
-      .finally(() => {setLoading(false)})
+    dispatch(loadIngridients())
   },[])
-
-  const makeOrder = (ingridientsID) => {
-    API.sendOrder(ingridientsID)
-      .then((data) => {
-        setOrdernumber(data.order.number)
-      })
-      .catch((err) => {setError(err)})
-      .finally(() => {
-        setActualModal('order');
-        setModalOpen(true);
-      })
-  }
-
-  const openIngridient = (ingridient) => {
-    setActualIngridient(ingridient);
-    setActualModal('ingridient');
-    setModalOpen(true);
-  }
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setActualIngridient({});
-    setActualModal();
-  }
-
   
   return (
     <div className={AppStyles.app}>
       <AppHeader />
-      <ActualIngridientsContext.Provider value={[actualIngridients, setActualIngridients]}>
-        {!isLoading && 
-          <main className={AppStyles.main}>
-            <BurgerIngridients buns = {ingridients.buns} sauces = {ingridients.sauces} main = {ingridients.main} openIngridient={openIngridient}/>
-            <BurgerConstructor makeOrder = {makeOrder}/>
-          </main>
-        }
+        <DndProvider backend={HTML5Backend}>
+          {!isLoading && !hasError && ingridients.buns.length !== 0 &&
+            <main className={AppStyles.main}>
+              <BurgerIngridients />
+              <BurgerConstructor />
+            </main>
+          }
+        </DndProvider>
 
-        {isModalOpened && 
-          <Modal close={closeModal} title={actualModal === 'ingridient' ? constant.titleIngridients : ''}>
-            {actualModal === 'ingridient' && <IngridientDetails actualIngridient={actualIngridient}/>}
-            {actualModal === 'order' && <OrderDetails orderNumber={orderNumber}/>}
+        {isModalOpen && 
+          <Modal title={actualModal === 'ingridient' ? titleIngridients : ''}>
+            {actualModal === 'ingridient' && <IngridientDetails />}
+            {actualModal === 'order' && <OrderDetails />}
           </Modal>
         }
-      </ActualIngridientsContext.Provider>
     </div>
   )
 }

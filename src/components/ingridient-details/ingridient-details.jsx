@@ -1,29 +1,26 @@
 import React from "react";
 import IngridientInfo from "../ingridient-info/ingridient-info";
 import IngridientDetailsStyles from './ingridient-details.module.css';
-import PropTypes from 'prop-types';
-import { ingridientDataType } from "../../utils/constants.js";
+import { useSelector } from "react-redux";
 
-const IngridientDetails = (props) => {
+const IngridientDetails = () => {
+
+  const actualIngridient = useSelector(store => store.modal.actualIngridient);
 
   return (
     <div className={IngridientDetailsStyles.main}>
       <img className={IngridientDetailsStyles.image} 
-        src={props.actualIngridient.image_large}
-        alt={props.actualIngridient.name}/>
-      <h4 className={`mt-4 mb-8 text text_type_main-medium ${IngridientDetailsStyles.name}`}>{props.actualIngridient.name}</h4>
+        src={actualIngridient.image_large}
+        alt={actualIngridient.name}/>
+      <h4 className={`mt-4 mb-8 text text_type_main-medium ${IngridientDetailsStyles.name}`}>{actualIngridient.name}</h4>
       <ul className={IngridientDetailsStyles.infoList}>
-        <IngridientInfo name='Калории,ккал' value={props.actualIngridient.calories} />
-        <IngridientInfo name='Белки, г' value={props.actualIngridient.proteins} />
-        <IngridientInfo name='Жиры, г' value={props.actualIngridient.fat} />
-        <IngridientInfo name='Углеводы, г' value={props.actualIngridient.carbohydrates} />
+        <IngridientInfo name='Калории,ккал' value={actualIngridient.calories} />
+        <IngridientInfo name='Белки, г' value={actualIngridient.proteins} />
+        <IngridientInfo name='Жиры, г' value={actualIngridient.fat} />
+        <IngridientInfo name='Углеводы, г' value={actualIngridient.carbohydrates} />
       </ul>
     </div>
   )
-}
-
-IngridientDetails.propTypes = {
-  actualIngridient: PropTypes.shape(ingridientDataType).isRequired
 }
 
 export default IngridientDetails;

@@ -1,32 +1,24 @@
 import React from "react";
 import BurgerMenuStyles from './burger-menu.module.css';
-import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from 'prop-types';
-import { ingridientDataType } from "../../utils/constants.js";
+import { ingridientDataType } from "../../services/constants.js";
+import IngridientCard from "../ingridient-card/ingridient-card";
 
-const BurgerMenu = (props) => {
+const BurgerMenu = React.forwardRef((props, ref) => {
   
   return (
-    <ul className={BurgerMenuStyles.list}>
+    <ul className={BurgerMenuStyles.list} ref={ref}>
         <h3 className={`text text_type_main-medium ${BurgerMenuStyles.sectionName}`}>{props.name}</h3>
         {props.menu.map((ingridient) => (
-          <li className={BurgerMenuStyles.ingridient} key = {ingridient._id} onClick={() => props.openIngridient(ingridient)}>
-            <img className={BurgerMenuStyles.ingridientIcon} src={ingridient.image} alt={ingridient.name} />
-            <div className={BurgerMenuStyles.price}>
-              <span className="text text_type_digits-default">{ingridient.price}</span>
-              <CurrencyIcon type="primary" />
-            </div>
-            <p className={`text text_type_main-default ${BurgerMenuStyles.ingridientName}`}>{ingridient.name}</p>
-          </li>
+          <IngridientCard ingridient={ingridient} key = {ingridient._id}/>
         ))}
       </ul>
   )
-}
+})
 
 BurgerMenu.propTypes = {
   menu: PropTypes.arrayOf(PropTypes.shape(ingridientDataType).isRequired),
-  name: PropTypes.string.isRequired,
-  openIngridient: PropTypes.func.isRequired
+  name: PropTypes.string.isRequired
 }
 
 export default BurgerMenu
