@@ -29,7 +29,9 @@ export const orderReducer = ( state = initialState, action) => {
     return {
       ...state,
       isLoading: false,
-      hasError: true
+      hasError: true,
+      orderName: '',
+      orderNumber: 0,
     }
   }
   default: {
