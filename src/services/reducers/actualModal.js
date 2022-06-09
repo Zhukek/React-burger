@@ -3,12 +3,7 @@ import { OPEN_ORDER_MODAL, OPEN_INGRIDIENT_MODAL, CLOSE_MODAL, ORDER_HAS_ERROR} 
 const initialState = {
   isModalOpen: false,
   actualModal: '',
-  actualIngridient: {},
-  order: {
-    orderName: '',
-    orderNumber: 0,
-    hasError: false
-  }
+  actualIngridient: {}
 }
 
 export const modalReducer = (state = initialState, action) => {
@@ -18,23 +13,6 @@ export const modalReducer = (state = initialState, action) => {
         ...state,
         isModalOpen: true,
         actualModal: 'order',
-        order: {
-          orderName: action.orderName,
-          orderNumber: action.orderNumber,
-          hasError: false
-        }
-      }
-    }
-    case ORDER_HAS_ERROR: {
-      return {
-        ...state,
-        isModalOpen: true,
-        actualModal: 'order',
-        order: {
-          orderName: '',
-          orderNumber: 0,
-          hasError: true
-        }
       }
     }
     case OPEN_INGRIDIENT_MODAL: {
@@ -47,11 +25,7 @@ export const modalReducer = (state = initialState, action) => {
     }
     case CLOSE_MODAL: {
       return {
-        order: {
-          orderName: '',
-          orderNumber: 0,
-          hasError: false
-        },
+        ...state,
         isModalOpen: false,
         actualModal: '',
         actualIngridient: {}

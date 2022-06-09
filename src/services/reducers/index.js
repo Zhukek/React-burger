@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import { GET_INGRIDIENTS_REQUEST, GET_INGRIDIENTS_REQUEST_SUCCES, GET_INGRIDIENTS_REQUEST_FAIL} from '../actions/index.js';
 import { modalReducer } from './actualModal.js';
 import { actualIngridientsReducer } from './actualIngridient.js';
+import { orderReducer } from './order.js';
 
 const initialState = {
   ingridients: {
@@ -32,5 +33,6 @@ const loadingReducer = (state = initialState, action) => {
 export const rootReducer = combineReducers({
   loading: loadingReducer,
   modal: modalReducer,
-  burgerConstruct: actualIngridientsReducer
+  burgerConstruct: actualIngridientsReducer,
+  order: orderReducer
 })

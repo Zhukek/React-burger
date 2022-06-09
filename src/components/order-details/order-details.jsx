@@ -5,9 +5,11 @@ import doneImagePath from "../../images/done.svg";
 import { useSelector } from "react-redux";
 
 const OrderDetails = () => {
-  const orderNumber = useSelector(store => store.modal.order.orderNumber)
-  
+  const {orderNumber, hasError} = useSelector(store => store.order)
+  console.log(hasError)
   return (
+    <>
+    { !hasError ?
     <div className={OrderDetailsStyles.order}>
       <h4 className="text text_type_digits-large mb-8">{orderNumber}</h4>
       <span className="text text_type_main-medium">идентификатор заказа</span>
@@ -15,6 +17,10 @@ const OrderDetails = () => {
       <p className="text text_type_main-small mb-2">Ваш заказ начали готовить</p>
       <p className="text text_type_main-small text_color_inactive">Дождитесь готовности на орбитальной станции</p>
     </div>
+      :
+    <p className="text text_type_main-medium">Что-то пошло не так</p>
+    }
+    </>
   )
 }
 

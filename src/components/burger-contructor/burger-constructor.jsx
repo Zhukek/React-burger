@@ -3,7 +3,7 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import BurgerConstructorCard from "../burger-constructor-card/burger-constructor-card";
 import { ConstructorElement, CurrencyIcon, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector, useDispatch } from "react-redux";
-import { makeOrder } from '../../services/actions/actualModal.js';
+import { makeOrder } from '../../services/actions/order.js';
 import { useDrop } from "react-dnd";
 import { CHOOSE_INGRIDIENT } from '../../services/actions/actualIngridients.js';
 import uniqid from 'uniqid';
