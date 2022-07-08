@@ -1,0 +1,7 @@
+.root {
+  margin-top: 120px;
+  margin-left: calc(50% - 620px);
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+}

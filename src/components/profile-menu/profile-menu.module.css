@@ -1,0 +1,25 @@
+.container {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  max-width: 320px;
+}
+
+.link {
+  text-decoration: none;
+  margin: 15px 0;
+  padding: 0;
+  transition: 0.3s;
+  text-align: left;
+  background-color: inherit;
+  border: none;
+}
+
+.link:hover {
+  color: #c4c4ee;
+}
+
+.link_active {
+  color: #F2F2F3;
+}

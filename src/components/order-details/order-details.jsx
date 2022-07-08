@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const OrderDetails = () => {
   const {orderNumber, hasError} = useSelector(store => store.order)
-  console.log(hasError)
+  
   return (
     <>
     { !hasError ?

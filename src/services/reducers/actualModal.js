@@ -1,9 +1,8 @@
-import { OPEN_ORDER_MODAL, OPEN_INGRIDIENT_MODAL, CLOSE_MODAL, ORDER_HAS_ERROR} from '../actions/actualModal.js';
+import { OPEN_ORDER_MODAL, CLOSE_MODAL} from '../actions/actualModal.js';
 
 const initialState = {
   isModalOpen: false,
-  actualModal: '',
-  actualIngridient: {}
+  actualModal: ''
 }
 
 export const modalReducer = (state = initialState, action) => {
@@ -15,20 +14,11 @@ export const modalReducer = (state = initialState, action) => {
         actualModal: 'order',
       }
     }
-    case OPEN_INGRIDIENT_MODAL: {
-      return {
-        ...state,
-        isModalOpen: true,
-        actualModal: 'ingridient',
-        actualIngridient: action.ingridient
-      }
-    }
     case CLOSE_MODAL: {
       return {
         ...state,
         isModalOpen: false,
-        actualModal: '',
-        actualIngridient: {}
+        actualModal: ''
       }
     }
     default: {

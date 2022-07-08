@@ -4,18 +4,9 @@ import ModalOverlay from "../modal-overlay/modal-overlay.jsx";
 import ModalStyles from "./modal.module.css";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from 'prop-types';
-import { useDispatch } from "react-redux";
-import { CLOSE_MODAL } from '../../services/actions/actualModal.js';
 
 const Modal = (props) => {
-
-  const dispatch = useDispatch();
-
-  const close = () => {
-    dispatch({
-      type: CLOSE_MODAL
-    })
-  }
+  const close = props.close
 
   useEffect(() => {
     document.addEventListener('keydown', escClose)
