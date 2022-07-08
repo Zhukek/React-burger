@@ -13,7 +13,6 @@ const IngridientDetails = () => {
     const ingridientsList = [...ingridients.buns, ...ingridients.sauces, ...ingridients.main];
     const selectedIngridient = ingridientsList.find((ingridient) => ingridient._id === params.id);
     setActualIngridient(selectedIngridient);
-    console.log(actualIngridient)
   },[params, ingridients])
 
   return (
