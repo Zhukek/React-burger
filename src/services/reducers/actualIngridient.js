@@ -1,4 +1,5 @@
 import { CHOOSE_INGRIDIENT, DELETE_INGRIDIENT, MOVE_INGRIDIENT} from '../actions/actualIngridients.js';
+import { ORDER_SUCCES } from '../actions/order.js';
 import plug from '../../images/plug.svg';
 
 const initialState = {
@@ -52,6 +53,9 @@ export const actualIngridientsReducer = (state = initialState, action) => {
         ...state,
         ingridients: ingridients
       }
+    }
+    case ORDER_SUCCES: {
+      return initialState
     }
     default: {
       return {...state}

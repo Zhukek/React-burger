@@ -41,7 +41,18 @@
 }
 
 .menuLink:hover {
-  opacity: 0.6;
+  filter: drop-shadow(0 0 10px #5427f8);
+}
+
+.logoLink {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.logoLink:hover {
+  filter: drop-shadow(0 0 10px #5427f8);
 }
 
 .profile {

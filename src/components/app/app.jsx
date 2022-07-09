@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import {Switch, Route, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { HomePage, LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, ProfilePage, IngredientPageModal } from './pages';
-import AppHeader from './components/app-header/app-header';
-import IngridientDetails from './components/ingridient-details/ingridient-details';
+import { HomePage, LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, ProfilePage, IngredientPageModal } from '../../pages';
+import AppHeader from '../app-header/app-header';
+import IngridientDetails from '../ingridient-details/ingridient-details';
 import AppStyles from './app.module.css';
-import { CHANGE_PAGE, refreshToken } from './services/actions/user';
-import { loadIngridients } from './services/actions';
-import ProtectedRoute from './components/protected-route/protected-route';
+import { CHANGE_PAGE, refreshToken } from '../../services/actions/user';
+import { loadIngridients } from '../../services/actions';
+import ProtectedRoute from '../protected-route/protected-route';
 
 const App = () => {
   const dispatch = useDispatch();

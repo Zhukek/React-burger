@@ -53,7 +53,9 @@ const AppHeader = () => {
             </Link>
           </li>
         </ul>
-        <Logo />
+        <Link to='/' className={appHeaderStyles.logoLink}>
+          <Logo />
+        </Link>
         <ul className={appHeaderStyles.menu}>
           <li className={`pt-4 pb-4 pr-5 pl-5 ${appHeaderStyles.profile}`}>
             <Link className={appHeaderStyles.menuLink} to="/profile">
