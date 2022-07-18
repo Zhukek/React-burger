@@ -12,11 +12,12 @@ export function getIngridients() {
     .then(checkResponce)
 }
 
-export function sendOrder(ingridientsID) {
+export function sendOrder(ingridientsID, token) {
   return fetch(`${url}orders`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      authorization: token
     },
     body: JSON.stringify(ingridientsID)
   })

@@ -14,12 +14,13 @@
   text-align: left;
   background-color: inherit;
   border: none;
+  color: #F2F2F3;
 }
 
 .link:hover {
   color: #c4c4ee;
 }
 
-.link_active {
-  color: #F2F2F3;
+.linkInactive {
+  color: #8585AD;
 }

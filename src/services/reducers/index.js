@@ -4,6 +4,7 @@ import { modalReducer } from './actualModal.js';
 import { actualIngridientsReducer } from './actualIngridient.js';
 import { orderReducer } from './order.js';
 import { userReducer } from "./user.js";
+import { wsSocketReducer } from "./wsSocket.js";
 
 const initialState = {
   ingridients: {
@@ -36,5 +37,6 @@ export const rootReducer = combineReducers({
   modal: modalReducer,
   burgerConstruct: actualIngridientsReducer,
   order: orderReducer,
-  user: userReducer
+  user: userReducer,
+  socket: wsSocketReducer
 })

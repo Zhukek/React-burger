@@ -27,6 +27,13 @@ const AppHeader = () => {
           profile: true
         })
       break;
+      case '/feed':
+        setActiveTab({
+          constructor: false,
+          feed: true,
+          profile: false
+        })
+      break;
       default:
         setActiveTab({
           constructor: false,
@@ -47,7 +54,7 @@ const AppHeader = () => {
             </Link>
           </li>
           <li className={appHeaderStyles.menuItem}>
-            <Link className={`text text_type_main-default text_color_inactive ${appHeaderStyles.menuLink}`} to="/">
+            <Link className={`text text_type_main-default text_color_inactive ${appHeaderStyles.menuLink}`} to="/feed">
               <ListIcon type={activeTab.feed ? 'primary' : 'secondary'} className={appHeaderStyles.icon} />
               <span className={`text text_type_main-default ${activeTab.feed ? '' : 'text_color_inactive'}`}>Лента заказов</span>
             </Link>

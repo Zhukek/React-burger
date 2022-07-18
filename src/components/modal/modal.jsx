@@ -5,9 +5,8 @@ import ModalStyles from "./modal.module.css";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from 'prop-types';
 
-const Modal = (props) => {
-  const close = props.close
-
+const Modal = ({close, title='', children}) => {
+  
   useEffect(() => {
     document.addEventListener('keydown', escClose)
 
@@ -26,12 +25,12 @@ const Modal = (props) => {
   return ReactDOM.createPortal(
     <div className={ModalStyles.main}>
       <div className={ModalStyles.modal}>
-        <h3 className="mt-10 ml-10 mr-10 text text_type_main-large pt-3 pb-3">{props.title}</h3>
+        <h3 className="mt-10 ml-10 mr-10 text text_type_main-large pt-3 pb-3">{title}</h3>
         <button className={ModalStyles.close}
         onClick={close}>
           <CloseIcon type="primary" />
         </button>
-        {props.children}
+        {children}
       </div>
       <ModalOverlay close={close} />
     </div>,

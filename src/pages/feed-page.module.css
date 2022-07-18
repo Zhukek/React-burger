@@ -1,0 +1,13 @@
+.main {
+  margin: 0 auto;
+  max-width: fit-content;
+  display: grid;
+  row-gap: 20px;
+  column-gap: 60px;
+  grid-template-columns: 600px 580px;
+}
+
+.title {
+  margin-top: 40px;
+  grid-column: 1 / 3;
+}

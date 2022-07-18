@@ -1,22 +1,32 @@
 import React, { useEffect } from 'react';
-import {Switch, Route, useLocation } from 'react-router-dom';
+import {Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { HomePage, LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, ProfilePage, IngredientPageModal } from '../../pages';
+import { HomePage, LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, ProfilePage, FeedPage } from '../../pages';
 import AppHeader from '../app-header/app-header';
 import IngridientDetails from '../ingridient-details/ingridient-details';
 import AppStyles from './app.module.css';
 import { CHANGE_PAGE, refreshToken } from '../../services/actions/user';
 import { loadIngridients } from '../../services/actions';
 import ProtectedRoute from '../protected-route/protected-route';
+import Modal from '../modal/modal';
+import AboutOrderCommon from '../about-order/about-order-common';
+import AboutOrderPrivate from '../about-order/about-order-private';
+
+import { titleIngridients } from '../../services/constants';
 
 const App = () => {
   const dispatch = useDispatch();
   const {authorization} = useSelector(store => store.user);
   const location = useLocation();
+  const history = useHistory();
 
   const background = location.state?.background;
   const path = location.pathname;
+
+  const closeModal = () => {
+    history.goBack();
+  }
 
   useEffect(() => {
     if (path !== '/login') {
@@ -32,14 +42,12 @@ const App = () => {
   return (
     <div className={AppStyles.app}>
       <AppHeader />
-      <Switch>
+      <Switch location={background || location}>
         <Route path="/" exact={true}>
           <HomePage />
         </Route>
         <Route path='/ingredients/:id' exact={true}>
-          {background ? 
-          <IngredientPageModal /> :
-          <IngridientDetails />}
+          <IngridientDetails />
         </Route>
         <Route path="/login" exact={true}>
           <LoginPage />
@@ -53,13 +61,41 @@ const App = () => {
         <Route path="/reset-password" exact={true}>
           <ResetPasswordPage />
         </Route>
-        <ProtectedRoute requires={authorization} path="/profile" exact={true}>
+        <ProtectedRoute requires={authorization} path="/profile/orders/:id" exact={true}>
+          <AboutOrderPrivate />
+        </ProtectedRoute>
+        <ProtectedRoute requires={authorization} path="/profile">
           <ProfilePage />
         </ProtectedRoute>
+        <Route path="/feed" exact={true}>
+          <FeedPage />
+        </Route>
+        <Route path="/feed/:id" exact={true}>
+          <AboutOrderCommon />
+        </Route>
         <Route>
           <h1>Ooooops</h1>
         </Route>
-      </Switch>   
+      </Switch>
+      {background &&
+        <Switch>
+          <Route path="/ingredients/:id" exact={true}>
+            <Modal close={closeModal} title={titleIngridients}>
+              <IngridientDetails />
+            </Modal>
+          </Route>
+          <Route path="/feed/:id" exact={true}>
+            <Modal close={closeModal}>
+              <AboutOrderCommon background={background} />
+            </Modal>
+          </Route>
+          <Route path="/profile/orders/:id" exact={true}>
+            <Modal close={closeModal}>
+              <AboutOrderPrivate background={background} />
+            </Modal>
+          </Route>
+        </Switch>
+      }      
     </div>
   )
 }
