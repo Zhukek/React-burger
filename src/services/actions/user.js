@@ -39,7 +39,7 @@ function signOut() {
     dispatch({
       type: LOGOUT
     })
-    deleteCookie('refreshToken')
+    deleteCookie('tokenToRefresh')
   }
 }
 
@@ -51,7 +51,7 @@ export function login(email, password) {
     loginRequest(email, password)
       .then((data) => {
         dispatchUserToken(data, dispatch);
-        setCookie('refreshToken',data.refreshToken);
+        setCookie('tokenToRefresh', data.refreshToken, {path: '/'});
       })
       .catch((err) => {
         dispatch({
@@ -70,7 +70,7 @@ export function registration(email, password, username) {
     register(email, password, username)
     .then((data) => {
       dispatchUserToken(data, dispatch);
-      setCookie('refreshToken',data.refreshToken);
+      setCookie('tokenToRefresh',data.refreshToken, {path: '/'});
     })
     .catch((err) => {
       dispatch({
@@ -85,7 +85,7 @@ export function getUserInfo(accessToken = '') {
   return function(dispatch) {
     updateUser(accessToken, dispatch)
       .catch((err) => {
-          if(err.message === 'getUser' && getCookie('refreshToken') !== '') {
+          if(err.message === 'getUser' && getCookie('tokenToRefresh') !== '') {
             dispatch(refreshToken());
           } else {
             dispatch(signOut())
@@ -95,7 +95,7 @@ export function getUserInfo(accessToken = '') {
 }
 
 export function refreshToken() {
-  const token = getCookie('refreshToken');
+  const token = getCookie('tokenToRefresh');
   return function(dispatch) {
     refreshRequest(token)
       .then((data) => {
@@ -104,11 +104,11 @@ export function refreshToken() {
             type: UPDATE_TOKEN,
             token: data.accessToken
           })
-          setCookie('refreshToken',data.refreshToken);
+          setCookie('tokenToRefresh',data.refreshToken, {path: '/'});
           updateUser(data.accessToken, dispatch)
         }
       })
-      .catch(() => {
+      .catch((err) => {
         dispatch(signOut())
       })
   }
@@ -116,7 +116,7 @@ export function refreshToken() {
 
 export function logout() {
   return function(dispatch) {
-    const token = getCookie('refreshToken');
+    const token = getCookie('tokenToRefresh');
     logoutRequest(token)
       .then((res) => {
         if(res.success) {
@@ -130,7 +130,6 @@ export function patchUser(token = '', bodyInner) {
   return function(dispatch) {
     setUserRequest(token, bodyInner)
     .then((data) => {
-      console.log(data)
       if (data.success) {
         dispatch({
           type: UPDATE_USER,
@@ -139,7 +138,7 @@ export function patchUser(token = '', bodyInner) {
       }
     })
     .catch(() => {
-      if(getCookie('refreshToken') !== '') {
+      if(getCookie('tokenToRefresh') !== '') {
         dispatch(refreshToken());
       } else {
         dispatch(signOut())

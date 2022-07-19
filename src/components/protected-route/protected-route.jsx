@@ -1,17 +1,19 @@
 import React from "react";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({children, requires, ...rest}) => {
-  return (
-    <Route {...rest} render={({location}) => requires ? (
-      children
-    ) : (
+  const location = useLocation();
+
+  if (!requires) {
+    return (
       <Redirect to={{ 
         pathname: '/login',
         state: {from: location}
        }}/>
-    )} />
-  )
+    )
+  }
+
+  return <Route {...rest}>{children}</Route>;
 }
 
 export default ProtectedRoute
