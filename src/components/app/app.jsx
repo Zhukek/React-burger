@@ -74,7 +74,7 @@ const App = () => {
           <AboutOrderCommon />
         </Route>
         <Route>
-          <h1>Ooooops</h1>
+          <h1>Page not found</h1>
         </Route>
       </Switch>
       {background &&
