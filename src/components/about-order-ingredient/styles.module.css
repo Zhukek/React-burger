@@ -1,0 +1,36 @@
+.ingredient {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+}
+
+.image {
+  margin: 0;
+  padding: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 100px;
+  background: #131316;
+  border: 2px solid transparent;
+  border-color: #4C4CFF;
+  box-sizing: border-box;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.name {
+  width: 400px;
+}
+
+.sum {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}

@@ -3,10 +3,21 @@ import OrderDetailsStyles from "./order-details.module.css";
 import PropTypes from 'prop-types';
 import doneImagePath from "../../images/done.svg";
 import { useSelector } from "react-redux";
+import loader from '../../images/loading.png';
 
 const OrderDetails = () => {
-  const {orderNumber, hasError} = useSelector(store => store.order)
-  console.log(hasError)
+  const {orderNumber, hasError, isLoading} = useSelector(store => store.order)
+  if (isLoading) {
+    return (
+      <>
+        <p className={`text text_type_main-medium mt-4 ${OrderDetailsStyles.text}`}>Пожалуйста, подождите</p>
+        <p className={`text text_type_main-medium mt-2 ${OrderDetailsStyles.text}`}>Ваш заказ обрабатывается</p>
+        <img className={OrderDetailsStyles.loader} src={loader} alt='Loading...'/>
+        <p className={`text text_type_main-small mb-8 ${OrderDetailsStyles.text}`}>Это займет 15-20 сеукнд</p>
+      </>
+    )
+  }
+  
   return (
     <>
     { !hasError ?
@@ -18,7 +29,7 @@ const OrderDetails = () => {
       <p className="text text_type_main-small text_color_inactive">Дождитесь готовности на орбитальной станции</p>
     </div>
       :
-    <p className="text text_type_main-medium">Что-то пошло не так</p>
+    <p className={`text text_type_main-medium mb-8 ${OrderDetailsStyles.text}`}>Что-то пошло не так</p>
     }
     </>
   )

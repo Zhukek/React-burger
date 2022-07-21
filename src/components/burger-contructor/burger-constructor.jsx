@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
+
 import burgerConstructorStyles from './burger-constructor.module.css';
 import BurgerConstructorCard from "../burger-constructor-card/burger-constructor-card";
 import { ConstructorElement, CurrencyIcon, Button } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -10,10 +12,15 @@ import uniqid from 'uniqid';
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
+  const {accessToken} = useSelector(store => store.user)
 
-  const orderClick = (IDs) => {
-    dispatch(makeOrder(IDs))
+  const orderClick = (IDs, token) => {
+    authorized ?
+    dispatch(makeOrder(IDs, token)) :
+    history.replace({pathname: '/login'});
   }
+  const authorized = useSelector(store => store.user.authorization);
   const bun = useSelector(store => store.burgerConstruct.bun);
   const innerIngridients = useSelector(store => store.burgerConstruct.ingridients);
   const [total, setTotal] = React.useState(0);  
@@ -78,7 +85,7 @@ const BurgerConstructor = () => {
           <CurrencyIcon type="primary" />
         </div>
         {bun._id !== 'none' && innerIngridients.length !== 0 &&
-        <Button type="primary" size="large" onClick={() => {orderClick({"ingredients": ingridientsID})}}>
+        <Button type="primary" size="large" onClick={() => {orderClick({"ingredients": ingridientsID}, accessToken)}}>
           Оформить заказ
         </Button>
         }

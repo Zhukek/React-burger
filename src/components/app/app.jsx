@@ -1,48 +1,101 @@
 import React, { useEffect } from 'react';
-import AppHeader from '../app-header/app-header.jsx';
-import BurgerIngridients from '../burger-ingridients/burger-ingridients.jsx';
-import BurgerConstructor from '../burger-contructor/burger-constructor.jsx';
-import Modal from '../modal/modal.jsx';
-import IngridientDetails from '../ingridient-details/ingridient-details.jsx';
-import OrderDetails from '../order-details/order-details.jsx';
+import {Switch, Route, useLocation, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { HomePage, LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, ProfilePage, FeedPage } from '../../pages';
+import AppHeader from '../app-header/app-header';
+import IngridientDetails from '../ingridient-details/ingridient-details';
 import AppStyles from './app.module.css';
+import { CHANGE_PAGE, refreshToken } from '../../services/actions/user';
+import { loadIngridients } from '../../services/actions';
+import ProtectedRoute from '../protected-route/protected-route';
+import Modal from '../modal/modal';
+import AboutOrderCommon from '../about-order/about-order-common';
+import AboutOrderPrivate from '../about-order/about-order-private';
 
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-
-import { useSelector, useDispatch } from 'react-redux';
-import { loadIngridients } from '../../services/actions/index.js';
-
-import { titleIngridients } from '../../services/constants.js';
+import { titleIngridients } from '../../services/constants';
 
 const App = () => {
   const dispatch = useDispatch();
+  const {authorization} = useSelector(store => store.user);
+  const location = useLocation();
+  const history = useHistory();
 
-  const {isLoading, hasError, ingridients} = useSelector(store => store.loading);
-  const {actualModal, isModalOpen} = useSelector(store => store.modal);
+  const background = location.state?.background;
+  const path = location.pathname;
+
+  const closeModal = () => {
+    history.goBack();
+  }
 
   useEffect(() => {
-    dispatch(loadIngridients())
+    if (path !== '/login') {
+      dispatch({type: CHANGE_PAGE})
+    }
+  },[path])
+
+  useEffect(() => {
+    dispatch(refreshToken());
+    dispatch(loadIngridients());
   },[])
-  
+
   return (
     <div className={AppStyles.app}>
       <AppHeader />
-        <DndProvider backend={HTML5Backend}>
-          {!isLoading && !hasError && ingridients.buns.length !== 0 &&
-            <main className={AppStyles.main}>
-              <BurgerIngridients />
-              <BurgerConstructor />
-            </main>
-          }
-        </DndProvider>
-
-        {isModalOpen && 
-          <Modal title={actualModal === 'ingridient' ? titleIngridients : ''}>
-            {actualModal === 'ingridient' && <IngridientDetails />}
-            {actualModal === 'order' && <OrderDetails />}
-          </Modal>
-        }
+      <Switch location={background || location}>
+        <Route path="/" exact={true}>
+          <HomePage />
+        </Route>
+        <Route path='/ingredients/:id' exact={true}>
+          <IngridientDetails />
+        </Route>
+        <Route path="/login" exact={true}>
+          <LoginPage />
+        </Route>
+        <Route path="/register" exact={true}>
+          <RegisterPage />
+        </Route>
+        <Route path="/forgot-password" exact={true}>
+          <ForgotPasswordPage />
+        </Route>
+        <Route path="/reset-password" exact={true}>
+          <ResetPasswordPage />
+        </Route>
+        <ProtectedRoute requires={authorization} path="/profile/orders/:id" exact={true}>
+          <AboutOrderPrivate />
+        </ProtectedRoute>
+        <ProtectedRoute requires={authorization} path="/profile">
+          <ProfilePage />
+        </ProtectedRoute>
+        <Route path="/feed" exact={true}>
+          <FeedPage />
+        </Route>
+        <Route path="/feed/:id" exact={true}>
+          <AboutOrderCommon />
+        </Route>
+        <Route>
+          <h1>Ooooops</h1>
+        </Route>
+      </Switch>
+      {background &&
+        <Switch>
+          <Route path="/ingredients/:id" exact={true}>
+            <Modal close={closeModal} title={titleIngridients}>
+              <IngridientDetails />
+            </Modal>
+          </Route>
+          <Route path="/feed/:id" exact={true}>
+            <Modal close={closeModal}>
+              <AboutOrderCommon background={background} />
+            </Modal>
+          </Route>
+          <Route path="/profile/orders/:id" exact={true}>
+            <Modal close={closeModal}>
+              <AboutOrderPrivate background={background} />
+            </Modal>
+          </Route>
+        </Switch>
+      }      
     </div>
   )
 }

@@ -5,20 +5,20 @@ export const ORDER_ERROR = 'ORDER_HAS_ERROR';
 export const ORDER_REQUEST = 'ORDER_REQUEST';
 export const ORDER_SUCCES = 'ORDER_SUCCES';
 
-export function makeOrder(ingridientsID) {
+export function makeOrder(ingridientsID, token) {
     return function(dispatch) {
       dispatch({
         type: ORDER_REQUEST
       })
-      sendOrder(ingridientsID)
+      dispatch({
+        type: OPEN_ORDER_MODAL
+      })
+      sendOrder(ingridientsID, token)
       .then((data) => {
         dispatch({
           type: ORDER_SUCCES,
           orderNumber: data.order.number,
           orderName: data.name
-        })
-        dispatch({
-          type: OPEN_ORDER_MODAL
         })
       })
       .catch(() => {

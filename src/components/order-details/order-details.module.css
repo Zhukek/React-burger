@@ -1,13 +1,23 @@
 .order {
-    margin: 0;
-    padding: 56px 0 120px 0;
-    text-align: center;
+  margin: 0;
+  padding: 56px 0 120px 0;
+  text-align: center;
 }
 
 .doneImage {
-    display: block;
-    margin: 60px auto;
-    padding: 0;
-    width: 120px;
-    height: 120px;
+  display: block;
+  margin: 60px auto;
+  padding: 0;
+  width: 120px;
+  height: 120px;
+}
+
+.loader {
+  margin: 60px auto;
+  display: block;
+}
+
+.text {
+  width: 100%;
+  text-align: center;
 }
