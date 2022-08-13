@@ -1,15 +1,13 @@
-import { TSocketActions } from "../actions/wsSocket";
-import { ThunkMiddleware } from "redux-thunk";
 import { IWsActions } from "../actions/wsSocket";
-import { RootState } from "../types";
+import { AppDispatch, RootState, TApplicationActions } from "../types";
 import { ISocketResponse } from "../types/data";
-import { Action } from "redux";
+import { Middleware, MiddlewareAPI } from "redux";
 
-export const socketMiddleware = (wsActions: IWsActions, wsAllURL: string, wsPrivateURL: string): ThunkMiddleware<RootState, TSocketActions, never> => {
-  return (store) => {
+export const socketMiddleware = (wsActions: IWsActions, wsAllURL: string, wsPrivateURL: string): Middleware => {
+  return (store: MiddlewareAPI<AppDispatch, RootState>) => {
     let socket: WebSocket;
 
-    return (next) => (action: TSocketActions) => {
+    return next => (action: TApplicationActions) => {
       const {dispatch, getState} = store;
       const {type}  = action;
       const { open, close, onOpen, onClose, error, onMessage, openPrivate , onMessagePrivate} = wsActions;
