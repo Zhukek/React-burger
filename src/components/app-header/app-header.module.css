@@ -29,21 +29,6 @@
     padding: 0;
 }
 
-.menuLink {
-  margin: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: white;
-  transition: 0.3s;
-}
-
-.menuLink:hover {
-  filter: drop-shadow(0 0 10px #5427f8);
-}
-
 .logoLink {
   margin: 0;
   padding: 0;
@@ -59,9 +44,4 @@
     composes: menuItem;
     margin-left: auto;
     margin-right: 0;
-}
-
-.icon {
-    width: 24px;
-    height: 24px;
 }
